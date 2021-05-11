@@ -1,4 +1,5 @@
 import Node from './Node';
+import {isEqual as defaultIsEqual} from '../../helpers';
 
 class LinkedList<T> {
   constructor(node: Node<T> | void) {
@@ -36,6 +37,8 @@ class LinkedList<T> {
 
     if (position === undefined || position > this.count) {
       this.push(node); // append to tail when position is empty or exceed
+
+      return;
     }
 
     if (position === 0) {
@@ -44,7 +47,7 @@ class LinkedList<T> {
       this.head.next = restList;
     }
 
-    const prevNode = this.findNode(position - 1);
+    const prevNode = this.getElementAt(position - 1);
 
     if (prevNode) {
       const restList = prevNode.next;
@@ -57,9 +60,13 @@ class LinkedList<T> {
     return this.count;
   }
 
-  private findNode(position) {
+  public getElementAt(position): void | Node<T> {
     if (position <= 0 || !this.head) {
       return this.head;
+    }
+
+    if (position >= this.count) {
+      return undefined;
     }
 
     let target: void | Node<T> = this.head;
@@ -71,6 +78,35 @@ class LinkedList<T> {
     }
 
     return target;
+  }
+
+  // remove the first meet element
+  public remove(element: T, isEqual: Function = defaultIsEqual) {
+    if (!this.head || !element) {
+      return; // undefined
+    }
+
+    let target = this.head;
+
+    if (isEqual(target, element)) { //head node equals to element
+      this.head.next ? this.head = this.head.next : this.head = undefined;
+      --this.count;
+
+      return;
+    }
+
+    let prev;
+
+    while (target) {
+      prev = target;
+      target = target.next ? target.next : undefined;
+
+      if (isEqual(target, element)) {
+        prev.next = target.next;
+        --this.count;
+        return;
+      }
+    }
   }
 
   public toString(): String {
