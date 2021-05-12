@@ -70,6 +70,15 @@ describe('LinkedList', () => {
       expect((list.getElementAt(0) as Node<any>).element).toEqual(1);
       expect((list.getElementAt(1) as Node<any>).element).toEqual(2);
       expect((list.getElementAt(2) as Node<any>).element).toEqual(3);
+      expect(list.size()).toEqual(3);
+
+      list.insert(new Node(0), 0);
+      expect(list.toString()).toEqual('0,1,2,3');
+      expect(list.size()).toEqual(4);
+
+      list.insert(new Node(4), 3);
+      expect(list.toString()).toEqual('0,1,2,4,3');
+      expect(list.size()).toEqual(5);
     })
   })
 
@@ -119,5 +128,17 @@ describe('LinkedList', () => {
       list.remove(3, isEqual);
       expect(list.size()).toEqual(0);
     });
+  })
+
+  describe('removeAt', () => {
+    const list = new LinkedList(new Node(1));
+    it('invalid position', (done) => {
+      try {
+        list.removeAt(-1)
+      } catch (err) {
+        expect(err.message).toEqual('invalid position')
+        done()
+      }
+    })
   })
 })

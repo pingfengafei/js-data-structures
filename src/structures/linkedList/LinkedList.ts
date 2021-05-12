@@ -1,3 +1,5 @@
+const assert = require('assert');
+
 import Node from './Node';
 import {isEqual as defaultIsEqual} from '../../helpers';
 
@@ -41,10 +43,14 @@ class LinkedList<T> {
       return;
     }
 
+    this.count++;
+
     if (position === 0) {
       const restList = this.head;
       this.head = node;
       this.head.next = restList;
+
+      return;
     }
 
     const prevNode = this.getElementAt(position - 1);
@@ -54,10 +60,6 @@ class LinkedList<T> {
       prevNode.next = node;
       node.next = restList;
     }
-  }
-
-  public size() {
-    return this.count;
   }
 
   public getElementAt(position): void | Node<T> {
@@ -107,6 +109,14 @@ class LinkedList<T> {
         return;
       }
     }
+  }
+
+  public removeAt(position): Node<T> | void { // starts from 0
+    assert(position >= 0 && position < this.count, 'invalid position'); // assert false throw message
+  }
+
+  public size() {
+    return this.count;
   }
 
   public toString(): String {
